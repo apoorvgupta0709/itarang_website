@@ -20,6 +20,7 @@ const solutionLinks = [
   { label: "For NBFCs", href: "/for-nbfcs" },
   { label: "For Investors", href: "/for-investors" },
   { label: "Products", href: "/products" },
+  { label: "Business Model", href: "/business-model" },
 ];
 
 const companyLinks = [
@@ -27,6 +28,7 @@ const companyLinks = [
   { label: "Roadmap", href: "/roadmap" },
   { label: "Regulatory", href: "/regulatory" },
   { label: "Competitive Edge", href: "/competitive" },
+  { label: "Fleet Reports", href: "/fleet-reports" },
   { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ];

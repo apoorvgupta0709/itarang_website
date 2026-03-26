@@ -13,6 +13,7 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.itarang.com"),
   title: "iTarang Technologies | The Intelligence Layer for India's EV Battery Economy",
   description:
     "India's 1st EV Battery Financing & Lifecycle Management Ecosystem. Turning batteries into programmable financial assets through smart telemetry, behavioral risk scoring, and lifecycle intelligence.",
