@@ -20,13 +20,13 @@ export default function ProofStrip() {
 
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 relative z-10">
         <FadeInOnScroll>
-          <p className="text-center text-sm font-semibold text-brand-300/60 uppercase tracking-[0.2em] mb-12">
+          <p className="text-center text-sm font-semibold text-white/70 uppercase tracking-[0.2em] mb-12">
             Traction to date
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
             {proofStats.map((stat, i) => (
               <FadeInOnScroll key={i} delay={i * 0.1}>
-                <div className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                <div className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors text-white">
                   <AnimatedCounter
                     value={stat.value}
                     suffix={stat.suffix}

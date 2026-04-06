@@ -117,207 +117,174 @@ export const productCategories: ProductCategory[] = [
 export interface ERickshawBattery {
   id: string;
   label: string;
-  voltage: number;
-  capacity: number;
-  energy: string;
-  weight: string;
-  dimensions: string;
-  cycleLife: number;
-  chemistry: string;
-  chargingTime: string;
-  operatingTemp: string;
+  badge?: string;
+  price: number;
+
+  /* Electrical Characteristics */
+  electrical: {
+    nominalVoltage: string;
+    nominalCapacity: string;
+    energy: string;
+    cellType: string;
+    cellConfiguration: string;
+    chargeVoltage: string;
+    dischargeVoltage: string;
+    maxChargeCurrent: string;
+    maxDischargeCurrent: string;
+    standardChargeCurrent: string;
+    impedance: string;
+    selfDischarge: string;
+    cycleLife: string;
+  };
+
+  /* Mechanical Characteristics */
+  mechanical: {
+    length: string;
+    width: string;
+    height: string;
+    weight: string;
+    casingMaterial: string;
+    terminalType: string;
+    ipRating: string;
+  };
+
+  /* Operating Conditions */
+  operating: {
+    chargingTemp: string;
+    dischargingTemp: string;
+    storageTemp: string;
+    humidity: string;
+    chargingTime: string;
+    chargeMethod: string;
+  };
+
+  /* Computed / display helpers */
   range: string;
   warranty: string;
-  price: number;
-  badge?: string;
+}
+
+/* ── helper to derive cells-in-series count from nominal voltage ── */
+const cellsInSeries = (v: number) => Math.round(v / 3.2);
+
+/* ── factory for generating consistent specs per variant ── */
+function makeVariant(
+  id: string,
+  label: string,
+  voltage: number,
+  capacity: number,
+  energyKwh: string,
+  dims: { l: string; w: string; h: string },
+  weight: string,
+  maxChargeCurrent: string,
+  maxDischargeCurrent: string,
+  stdChargeCurrent: string,
+  impedance: string,
+  chargingTime: string,
+  range: string,
+  badge?: string,
+): ERickshawBattery {
+  const cells = cellsInSeries(voltage);
+  return {
+    id,
+    label,
+    badge,
+    price: 0, // prices set below
+    electrical: {
+      nominalVoltage: `${voltage}V`,
+      nominalCapacity: `${capacity}AH`,
+      energy: energyKwh,
+      cellType: "LiFePO4 (Lithium Iron Phosphate)",
+      cellConfiguration: `${cells}S (${cells} cells in series)`,
+      chargeVoltage: `${(cells * 3.65).toFixed(1)}V`,
+      dischargeVoltage: `${(cells * 2.5).toFixed(1)}V`,
+      maxChargeCurrent,
+      maxDischargeCurrent,
+      standardChargeCurrent: stdChargeCurrent,
+      impedance,
+      selfDischarge: "≤ 3% / month",
+      cycleLife: "2,000+ cycles (80% DOD)",
+    },
+    mechanical: {
+      length: dims.l,
+      width: dims.w,
+      height: dims.h,
+      weight,
+      casingMaterial: "ABS + PC (flame retardant V-0)",
+      terminalType: "M8 Copper Bolts",
+      ipRating: "IP56",
+    },
+    operating: {
+      chargingTemp: "0°C to 45°C",
+      dischargingTemp: "-20°C to 60°C",
+      storageTemp: "-20°C to 45°C (recommended 25°C)",
+      humidity: "15% – 85% RH (non-condensing)",
+      chargingTime,
+      chargeMethod: "CC/CV (Constant Current / Constant Voltage)",
+    },
+    range,
+    warranty: "3 Years / 2,000 Cycles",
+  };
 }
 
 export const eRickshawBatteries: ERickshawBattery[] = [
-  // 51V Series
-  {
-    id: "er-51v-105ah",
-    label: "51V 105AH",
-    voltage: 51,
-    capacity: 105,
-    energy: "5.376 kWh",
-    weight: "32 kg",
-    dimensions: "520 × 230 × 260 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "3–4 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "70–90 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 45000,
-    badge: "Popular",
-  },
-  {
-    id: "er-51v-132ah",
-    label: "51V 132AH",
-    voltage: 51,
-    capacity: 132,
-    energy: "6.758 kWh",
-    weight: "38 kg",
-    dimensions: "520 × 260 × 280 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "4–5 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "90–110 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 52000,
-  },
-  {
-    id: "er-51v-153ah",
-    label: "51V 153AH",
-    voltage: 51,
-    capacity: 153,
-    energy: "7.834 kWh",
-    weight: "42 kg",
-    dimensions: "530 × 270 × 300 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "4–5 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "100–130 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 58000,
-  },
-  {
-    id: "er-51v-232ah",
-    label: "51V 232AH",
-    voltage: 51,
-    capacity: 232,
-    energy: "11.878 kWh",
-    weight: "58 kg",
-    dimensions: "580 × 300 × 320 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "5–7 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "140–180 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 78000,
-    badge: "Max Range",
-  },
-  // 61V Series
-  {
-    id: "er-61v-105ah",
-    label: "61V 105AH",
-    voltage: 61,
-    capacity: 105,
-    energy: "6.405 kWh",
-    weight: "35 kg",
-    dimensions: "540 × 240 × 270 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "3–4 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "80–100 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 55000,
-  },
-  {
-    id: "er-61v-132ah",
-    label: "61V 132AH",
-    voltage: 61,
-    capacity: 132,
-    energy: "8.052 kWh",
-    weight: "42 kg",
-    dimensions: "540 × 270 × 290 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "4–5 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "100–120 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 62000,
-    badge: "Best Seller",
-  },
-  {
-    id: "er-61v-153ah",
-    label: "61V 153AH",
-    voltage: 61,
-    capacity: 153,
-    energy: "9.333 kWh",
-    weight: "48 kg",
-    dimensions: "560 × 280 × 310 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "4–6 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "120–150 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 70000,
-  },
-  {
-    id: "er-61v-232ah",
-    label: "61V 232AH",
-    voltage: 61,
-    capacity: 232,
-    energy: "14.152 kWh",
-    weight: "65 kg",
-    dimensions: "600 × 310 × 340 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "6–8 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "160–200 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 95000,
-    badge: "Premium",
-  },
-  // 64V Series
-  {
-    id: "er-64v-105ah",
-    label: "64V 105AH",
-    voltage: 64,
-    capacity: 105,
-    energy: "6.72 kWh",
-    weight: "37 kg",
-    dimensions: "550 × 245 × 275 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "3–4 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "85–105 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 58000,
-  },
-  {
-    id: "er-64v-132ah",
-    label: "64V 132AH",
-    voltage: 64,
-    capacity: 132,
-    energy: "8.448 kWh",
-    weight: "44 kg",
-    dimensions: "550 × 275 × 295 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "4–5 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "105–130 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 66000,
-  },
-  // 72V Series
-  {
-    id: "er-72v-232ah",
-    label: "72V 232AH",
-    voltage: 72,
-    capacity: 232,
-    energy: "16.704 kWh",
-    weight: "72 kg",
-    dimensions: "620 × 320 × 360 mm",
-    cycleLife: 2000,
-    chemistry: "LiFePO4",
-    chargingTime: "7–9 hours",
-    operatingTemp: "-20°C to 60°C",
-    range: "180–220 km",
-    warranty: "3 Years / 2000 Cycles",
-    price: 115000,
-    badge: "Max Power",
-  },
+  // ── 51V Series (16S) ──
+  { ...makeVariant("er-51v-105ah", "51V 105AH", 51.2, 105, "5.376 kWh",
+    { l: "520 mm", w: "230 mm", h: "260 mm" }, "32 kg",
+    "50A", "100A", "20A", "≤ 25 mΩ", "3–4 hours", "70–90 km", "Popular"),
+    price: 45000 },
+
+  { ...makeVariant("er-51v-132ah", "51V 132AH", 51.2, 132, "6.758 kWh",
+    { l: "520 mm", w: "260 mm", h: "280 mm" }, "38 kg",
+    "60A", "120A", "25A", "≤ 22 mΩ", "4–5 hours", "90–110 km"),
+    price: 52000 },
+
+  { ...makeVariant("er-51v-153ah", "51V 153AH", 51.2, 153, "7.834 kWh",
+    { l: "530 mm", w: "270 mm", h: "300 mm" }, "42 kg",
+    "60A", "150A", "30A", "≤ 20 mΩ", "4–5 hours", "100–130 km"),
+    price: 58000 },
+
+  { ...makeVariant("er-51v-232ah", "51V 232AH", 51.2, 232, "11.878 kWh",
+    { l: "580 mm", w: "300 mm", h: "320 mm" }, "58 kg",
+    "80A", "200A", "40A", "≤ 15 mΩ", "5–7 hours", "140–180 km", "Max Range"),
+    price: 78000 },
+
+  // ── 61V Series (19S) ──
+  { ...makeVariant("er-61v-105ah", "61V 105AH", 60.8, 105, "6.405 kWh",
+    { l: "540 mm", w: "240 mm", h: "270 mm" }, "35 kg",
+    "50A", "100A", "20A", "≤ 28 mΩ", "3–4 hours", "80–100 km"),
+    price: 55000 },
+
+  { ...makeVariant("er-61v-132ah", "61V 132AH", 60.8, 132, "8.052 kWh",
+    { l: "540 mm", w: "270 mm", h: "290 mm" }, "42 kg",
+    "60A", "120A", "25A", "≤ 24 mΩ", "4–5 hours", "100–120 km", "Best Seller"),
+    price: 62000 },
+
+  { ...makeVariant("er-61v-153ah", "61V 153AH", 60.8, 153, "9.333 kWh",
+    { l: "560 mm", w: "280 mm", h: "310 mm" }, "48 kg",
+    "60A", "150A", "30A", "≤ 22 mΩ", "4–6 hours", "120–150 km"),
+    price: 70000 },
+
+  { ...makeVariant("er-61v-232ah", "61V 232AH", 60.8, 232, "14.152 kWh",
+    { l: "600 mm", w: "310 mm", h: "340 mm" }, "65 kg",
+    "80A", "200A", "40A", "≤ 16 mΩ", "6–8 hours", "160–200 km", "Premium"),
+    price: 95000 },
+
+  // ── 64V Series (20S) ──
+  { ...makeVariant("er-64v-105ah", "64V 105AH", 64.0, 105, "6.72 kWh",
+    { l: "550 mm", w: "245 mm", h: "275 mm" }, "37 kg",
+    "50A", "100A", "20A", "≤ 30 mΩ", "3–4 hours", "85–105 km"),
+    price: 58000 },
+
+  { ...makeVariant("er-64v-132ah", "64V 132AH", 64.0, 132, "8.448 kWh",
+    { l: "550 mm", w: "275 mm", h: "295 mm" }, "44 kg",
+    "60A", "120A", "25A", "≤ 25 mΩ", "4–5 hours", "105–130 km"),
+    price: 66000 },
+
+  // ── 72V Series (22S) ──
+  { ...makeVariant("er-72v-232ah", "72V 232AH", 70.4, 232, "16.704 kWh",
+    { l: "620 mm", w: "320 mm", h: "360 mm" }, "72 kg",
+    "100A", "250A", "50A", "≤ 12 mΩ", "7–9 hours", "180–220 km", "Max Power"),
+    price: 115000 },
 ];
 
 export const safetyFeatures = [

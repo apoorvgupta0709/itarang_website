@@ -10,14 +10,17 @@ interface VariantSelectorProps {
 }
 
 export default function VariantSelector({ variants, selectedId, onSelect }: VariantSelectorProps) {
-  // Group variants by voltage
-  const voltageGroups = variants.reduce<Record<number, ERickshawBattery[]>>((acc, v) => {
-    if (!acc[v.voltage]) acc[v.voltage] = [];
-    acc[v.voltage].push(v);
+  // Extract voltage group from label (e.g. "51V 105AH" → "51V")
+  const getVoltageGroup = (b: ERickshawBattery) => b.label.split(" ")[0];
+
+  const voltageGroups = variants.reduce<Record<string, ERickshawBattery[]>>((acc, v) => {
+    const vg = getVoltageGroup(v);
+    if (!acc[vg]) acc[vg] = [];
+    acc[vg].push(v);
     return acc;
   }, {});
 
-  const voltages = Object.keys(voltageGroups).map(Number).sort((a, b) => a - b);
+  const voltages = Object.keys(voltageGroups).sort((a, b) => parseInt(a) - parseInt(b));
 
   return (
     <div className="space-y-4">
@@ -28,7 +31,7 @@ export default function VariantSelector({ variants, selectedId, onSelect }: Vari
         {voltages.map((voltage) => (
           <div key={voltage} className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold text-brand-500 uppercase tracking-wider w-10 shrink-0 font-mono">
-              {voltage}V
+              {voltage}
             </span>
             <div className="flex flex-wrap gap-2">
               {voltageGroups[voltage].map((variant) => {
