@@ -6,6 +6,7 @@ import { Battery, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { mainNavItems } from "@/data/navigation";
 import Button from "@/components/ui/Button";
+import LoginButton from "@/components/auth/LoginButton";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
@@ -80,7 +81,8 @@ export default function Navbar() {
 
             {/* CTA + Mobile */}
             <div className="flex items-center gap-3">
-              <div className="hidden lg:block">
+              <div className="hidden lg:flex items-center gap-2">
+                <LoginButton scrolled={scrolled} />
                 <Button href="/contact" size="sm" className={cn(
                   !scrolled && "bg-white/10 border border-white/20 text-white hover:bg-white/20 shadow-none"
                 )}>
@@ -164,7 +166,8 @@ export default function Navbar() {
                     Blog
                   </Link>
                 </div>
-                <div className="pt-4">
+                <div className="pt-4 space-y-2">
+                  <LoginButton variant="mobile" fullWidth />
                   <Button href="/contact" size="md" className="w-full justify-center">
                     Talk to Us
                   </Button>
